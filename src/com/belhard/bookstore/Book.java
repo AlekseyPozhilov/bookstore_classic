@@ -1,5 +1,6 @@
 package com.belhard.bookstore;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Book {
@@ -7,7 +8,7 @@ public class Book {
     private String author;
     private String isbn;
     private Integer numberOfPages;
-    private Double price;
+    private BigDecimal price;
     private Integer yearOfPublishing;
     private String title;
 
@@ -43,11 +44,11 @@ public class Book {
         this.numberOfPages = numberOfPages;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

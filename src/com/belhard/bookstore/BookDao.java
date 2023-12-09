@@ -10,7 +10,7 @@ public interface BookDao {
 
     void update(Book book) throws SQLException;
 
-    void delete(int id) throws SQLException;
+    Book delete(int id) throws SQLException;
 
     List<Book> getAll() throws SQLException;
 

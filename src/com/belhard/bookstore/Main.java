@@ -1,10 +1,12 @@
 package com.belhard.bookstore;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    private static final String URL = "jdbc:postgresql://127.0.0.1:5432/bookstore_bh";
+    private static final String URL = "jdbc:postgresql://127.0.0.1:5432/bookstore_pozhilov";
     private static final String USER = "postgres";
     private static final String PASSWORD = "root";
 
@@ -29,11 +31,11 @@ public class Main {
 
         while (true) {
             String command = scanner.nextLine();
-            CRUD crud = new CRUD(connection);
+            BookDaoImplCRUD crud = new BookDaoImplCRUD(connection);
 
             switch (command) {
                 case "all":
-                    printDataBase(connection);
+                    crud.getAll();
                     break;
                 case "exit":
                     System.exit(0);
@@ -59,31 +61,7 @@ public class Main {
                         System.out.println("Book with ID " + bookIdDel + " not found.");
                     }
                     break;
-                default:
-                    System.out.println("Invalid command");
-                    break;
             }
-        }
-    }
-
-    private static void printDataBase(Connection connection) {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books");
-
-            while (resultSet.next()) {
-                Long id = resultSet.getLong(1);
-                String author = resultSet.getString(2);
-                String isbn = resultSet.getString(3);
-                Integer numberOfPages = resultSet.getInt(4);
-                Double price = resultSet.getDouble(5);
-                Integer yearOfPublishing = resultSet.getInt(6);
-                String title = resultSet.getString(7);
-
-                System.out.printf("book {id = %d, author = %s, isbn = %s, numberOfPages = %d, price = %f$, yearOfPublishing = %d, title = %s}%n", id, author, isbn, numberOfPages, price, yearOfPublishing, title);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 }

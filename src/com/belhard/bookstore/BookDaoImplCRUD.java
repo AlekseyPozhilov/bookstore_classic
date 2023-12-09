@@ -1,13 +1,17 @@
 package com.belhard.bookstore;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CRUD {
-    private Connection connection;
+public class BookDaoImplCRUD implements BookDao {
+    private final Connection connection;
 
-    public CRUD(Connection connection) {
+    public BookDaoImplCRUD(Connection connection) {
         this.connection = connection;
     }
 
@@ -19,7 +23,7 @@ public class CRUD {
             statement.setString(2, book.getAuthor());
             statement.setString(3, book.getIsbn());
             statement.setInt(4, book.getNumberOfPages());
-            statement.setDouble(5, book.getPrice());
+            statement.setBigDecimal(5, book.getPrice());
             statement.setInt(6, book.getYearOfPublishing());
             statement.setString(7, book.getTitle());
             statement.executeUpdate();
@@ -54,7 +58,7 @@ public class CRUD {
             statement.setString(1, book.getAuthor());
             statement.setString(2, book.getIsbn());
             statement.setInt(3, book.getNumberOfPages());
-            statement.setDouble(4, book.getPrice());
+            statement.setBigDecimal(4, book.getPrice());
             statement.setInt(5, book.getYearOfPublishing());
             statement.setString(6, book.getTitle());
             statement.setLong(7, book.getId());
@@ -86,11 +90,11 @@ public class CRUD {
             while (resultSet.next()) {
                 Book book = extractBookFromResultSet(resultSet);
                 books.add(book);
+                System.out.printf("book {id = %d, author = %s, isbn = %s, numberOfPages = %d, price = %f$, yearOfPublishing = %d, title = %s}%n", book.getId(), book.getAuthor(), book.getIsbn(), book.getNumberOfPages(), book.getPrice(), book.getYearOfPublishing(), book.getTitle());
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         return books;
     }
 
@@ -100,7 +104,7 @@ public class CRUD {
             String author = resultSet.getString("author");
             String isbn = resultSet.getString("isbn");
             Integer numberOfPages = resultSet.getInt("numberOfPages");
-            Double price = resultSet.getDouble("price");
+            BigDecimal price = resultSet.getBigDecimal("price");
             Integer yearOfPublishing = resultSet.getInt("yearOfPublishing");
             String title = resultSet.getString("title");
 
