@@ -14,14 +14,14 @@ public class BookDaoImplCRUD implements BookDao {
     private static final String UPDATE_QUERY = "UPDATE books SET author = ?, isbn = ?, numberOfPages = ?, price = ?, yearOfPublishing = ?, title = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM books WHERE id = ?";
     private static final String SELECTABLE_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books";
-    private final Connection connection;
+    private DataSource dataSource;
 
-    public BookDaoImplCRUD(Connection connection) {
-        this.connection = connection;
+    public BookDaoImplCRUD(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
-
     public void create(Book book) {
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
             statement.setLong(1, book.getId());
             statement.setString(2, book.getAuthor());
             statement.setString(3, book.getIsbn());
@@ -36,8 +36,10 @@ public class BookDaoImplCRUD implements BookDao {
     }
 
     public Book read(int id) {
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY)) {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(SELECT_QUERY);
             statement.setInt(1, id);
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return extractBookFromResultSet(resultSet);
@@ -53,7 +55,8 @@ public class BookDaoImplCRUD implements BookDao {
     }
 
     public void update(Book book) {
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
             statement.setString(1, book.getAuthor());
             statement.setString(2, book.getIsbn());
             statement.setInt(3, book.getNumberOfPages());
@@ -68,7 +71,8 @@ public class BookDaoImplCRUD implements BookDao {
     }
 
     public Book delete(int id) {
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -81,8 +85,9 @@ public class BookDaoImplCRUD implements BookDao {
     public List<Book> getAll() {
         List<Book> books = new ArrayList<>();
 
-        try (PreparedStatement statement = connection.prepareStatement(SELECTABLE_QUERY);
-             ResultSet resultSet = statement.executeQuery()) {
+        try (Connection connection = dataSource.getConnection()) {
+             PreparedStatement statement = connection.prepareStatement(SELECTABLE_QUERY);
+             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Book book = extractBookFromResultSet(resultSet);
                 books.add(book);

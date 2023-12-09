@@ -1,17 +1,13 @@
 package com.belhard.bookstore;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    private static final String URL = "jdbc:postgresql://127.0.0.1:5432/bookstore_pozhilov";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "root";
-
+    private static DataSource dataSource = new DataSource();
     public static void main(String[] args) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = dataSource.getConnection()) {
             consoleApp(connection);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -31,7 +27,7 @@ public class Main {
 
         while (true) {
             String command = scanner.nextLine();
-            BookDaoImplCRUD crud = new BookDaoImplCRUD(connection);
+            BookDaoImplCRUD crud = new BookDaoImplCRUD(dataSource);
 
             switch (command) {
                 case "all":
