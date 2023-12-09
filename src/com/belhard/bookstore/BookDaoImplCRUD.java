@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookDaoImplCRUD implements BookDao {
+    private static final String INSERT_QUERY = "INSERT INTO books (id, author, isbn, numberOfPages, price, yearOfPublishing, title) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String SELECT_QUERY = "SELECT * FROM books WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE books SET author = ?, isbn = ?, numberOfPages = ?, price = ?, yearOfPublishing = ?, title = ? WHERE id = ?";
+    private static final String DELETE_QUERY = "DELETE FROM books WHERE id = ?";
+    private static final String SELECTABLE_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books";
     private final Connection connection;
 
     public BookDaoImplCRUD(Connection connection) {
@@ -16,9 +21,7 @@ public class BookDaoImplCRUD implements BookDao {
     }
 
     public void create(Book book) {
-        String query = "INSERT INTO books (id, author, isbn, numberOfPages, price, yearOfPublishing, title) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
             statement.setLong(1, book.getId());
             statement.setString(2, book.getAuthor());
             statement.setString(3, book.getIsbn());
@@ -33,9 +36,7 @@ public class BookDaoImplCRUD implements BookDao {
     }
 
     public Book read(int id) {
-        String query = "SELECT * FROM books WHERE id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -52,9 +53,7 @@ public class BookDaoImplCRUD implements BookDao {
     }
 
     public void update(Book book) {
-        String query = "UPDATE books SET author = ?, isbn = ?, numberOfPages = ?, price = ?, yearOfPublishing = ?, title = ? WHERE id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setString(1, book.getAuthor());
             statement.setString(2, book.getIsbn());
             statement.setInt(3, book.getNumberOfPages());
@@ -69,9 +68,7 @@ public class BookDaoImplCRUD implements BookDao {
     }
 
     public Book delete(int id) {
-        String query = "DELETE FROM books WHERE id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -82,10 +79,9 @@ public class BookDaoImplCRUD implements BookDao {
     }
 
     public List<Book> getAll() {
-        String query = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books";
         List<Book> books = new ArrayList<>();
 
-        try (PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(SELECTABLE_QUERY);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Book book = extractBookFromResultSet(resultSet);
