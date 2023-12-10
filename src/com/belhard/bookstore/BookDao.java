@@ -14,4 +14,11 @@ public interface BookDao {
 
     List<Book> getAll() throws SQLException;
 
+    Book findById(Long id);
+
+    Book findByIsbn(String isbn) throws SQLException;
+
+    List<Book> findByAuthor(String author) throws SQLException;
+
+    long countAll() throws SQLException;
 }
