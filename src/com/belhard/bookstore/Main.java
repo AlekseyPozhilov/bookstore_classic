@@ -5,17 +5,25 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    private static DataSource dataSource = new DataSource();
     public static void main(String[] args) {
+        PropertiesManager propertiesManager = new PropertiesManager("application.properties");
+
+        String url = propertiesManager.getKey("my.app.db.url");
+        String user = propertiesManager.getKey("my.app.db.user");
+        String password = propertiesManager.getKey("my.app.db.password");
+
+        DataSourceImpl dataSource = new DataSourceImpl(url, user, password);
+
         try (Connection connection = dataSource.getConnection()) {
-            consoleApp(connection);
+            consoleApp(dataSource);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void consoleApp(Connection connection) {
+    private static void consoleApp(DataSource dataSource) {
         Scanner scanner = new Scanner(System.in);
+        BookDaoImplCRUD crud = new BookDaoImplCRUD(dataSource);
 
         System.out.println("List of commands:\n " +
                 "1)all\n " +
@@ -27,7 +35,6 @@ public class Main {
 
         while (true) {
             String command = scanner.nextLine();
-            BookDaoImplCRUD crud = new BookDaoImplCRUD(dataSource);
 
             switch (command) {
                 case "all":
