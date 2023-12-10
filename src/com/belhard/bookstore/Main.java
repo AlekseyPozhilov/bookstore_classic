@@ -8,9 +8,10 @@ public class Main {
     public static void main(String[] args) {
         PropertiesManager propertiesManager = new PropertiesManager("application.properties");
 
-        String url = propertiesManager.getKey("my.app.db.url");
-        String user = propertiesManager.getKey("my.app.db.user");
-        String password = propertiesManager.getKey("my.app.db.password");
+        String profile = propertiesManager.getKey("my.app.profile");
+        String url = propertiesManager.getKey("my.app.db." + profile + ".url");
+        String user = propertiesManager.getKey("my.app.db." + profile + ".user");
+        String password = propertiesManager.getKey("my.app.db." + profile + ".password");
 
         DataSourceImpl dataSource = new DataSourceImpl(url, user, password);
 
