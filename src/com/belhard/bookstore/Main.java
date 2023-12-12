@@ -1,5 +1,7 @@
 package com.belhard.bookstore;
 
+import com.belhard.bookstore.entity.Book;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -24,7 +26,7 @@ public class Main {
 
     private static void consoleApp(DataSource dataSource) {
         Scanner scanner = new Scanner(System.in);
-        BookDaoImplCRUD crud = new BookDaoImplCRUD(dataSource);
+        BookDaoImpl crud = new BookDaoImpl(dataSource);
 
         System.out.println("List of commands:\n " +
                 "1)all\n " +

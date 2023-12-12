@@ -1,4 +1,6 @@
-package com.belhard.bookstore;
+package com.belhard.bookstore.service;
+
+import com.belhard.bookstore.BookDto;
 
 import java.sql.SQLException;
 import java.util.List;

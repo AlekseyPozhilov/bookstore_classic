@@ -1,5 +1,7 @@
 package com.belhard.bookstore;
 
+import com.belhard.bookstore.entity.Book;
+
 import java.sql.SQLException;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.belhard.bookstore;
 
-import javax.sound.midi.MidiFileFormat;
-import java.security.spec.RSAOtherPrimeInfo;
+import com.belhard.bookstore.entity.Book;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookDaoImplCRUD implements BookDao {
+public class BookDaoImpl implements BookDao {
     public static final String SELECT_ISBN_QUERY = "SELECT id, author, numberOfPages, price, yearOfPublishing, title FROM books";
     public static final String SELECT_ID_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE id = ?";
     private static final String SELECT_AUTHOR_QUERY = "SELECT id, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE  author  = ?";
@@ -21,7 +21,7 @@ public class BookDaoImplCRUD implements BookDao {
     private static final String SELECTABLE_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books";
     private DataSource dataSource;
 
-    public BookDaoImplCRUD(DataSource dataSource) {
+    public BookDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
