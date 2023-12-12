@@ -1,10 +1,10 @@
-package com.belhard.bookstore;
+package com.belhard.bookstore.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DataSourceImpl implements DataSource{
+public class DataSourceImpl implements DataSource {
     private  final String url ;
     private final String user;
     private final String password ;
