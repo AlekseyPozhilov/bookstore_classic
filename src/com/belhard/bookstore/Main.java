@@ -1,5 +1,7 @@
 package com.belhard.bookstore;
 
+import com.belhard.bookstore.entity.Book;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -8,9 +10,10 @@ public class Main {
     public static void main(String[] args) {
         PropertiesManager propertiesManager = new PropertiesManager("application.properties");
 
-        String url = propertiesManager.getKey("my.app.db.url");
-        String user = propertiesManager.getKey("my.app.db.user");
-        String password = propertiesManager.getKey("my.app.db.password");
+        String profile = propertiesManager.getKey("my.app.profile");
+        String url = propertiesManager.getKey("my.app.db." + profile + ".url");
+        String user = propertiesManager.getKey("my.app.db." + profile + ".user");
+        String password = propertiesManager.getKey("my.app.db." + profile + ".password");
 
         DataSourceImpl dataSource = new DataSourceImpl(url, user, password);
 
@@ -23,7 +26,7 @@ public class Main {
 
     private static void consoleApp(DataSource dataSource) {
         Scanner scanner = new Scanner(System.in);
-        BookDaoImplCRUD crud = new BookDaoImplCRUD(dataSource);
+        BookDaoImpl crud = new BookDaoImpl(dataSource);
 
         System.out.println("List of commands:\n " +
                 "1)all\n " +

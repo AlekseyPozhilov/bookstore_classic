@@ -1,5 +1,7 @@
 package com.belhard.bookstore;
 
+import com.belhard.bookstore.entity.Book;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,4 +16,11 @@ public interface BookDao {
 
     List<Book> getAll() throws SQLException;
 
+    Book findById(Long id);
+
+    Book findByIsbn(String isbn) throws SQLException;
+
+    List<Book> findByAuthor(String author) throws SQLException;
+
+    long countAll() throws SQLException;
 }

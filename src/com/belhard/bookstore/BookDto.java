@@ -3,7 +3,7 @@ package com.belhard.bookstore;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Book {
+public class BookDto {
     private Long id;
     private String author;
     private String isbn;
@@ -68,19 +68,22 @@ public class Book {
         this.title = title;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return Objects.equals(id, book.id) && Objects.equals(author, book.author) && Objects.equals(isbn, book.isbn) && Objects.equals(numberOfPages, book.numberOfPages) && Objects.equals(price, book.price) && Objects.equals(yearOfPublishing, book.yearOfPublishing) && Objects.equals(title, book.title);
+        BookDto bookDto = (BookDto) o;
+        return Objects.equals(id, bookDto.id) && Objects.equals(author, bookDto.author) && Objects.equals(isbn, bookDto.isbn) && Objects.equals(numberOfPages, bookDto.numberOfPages) && Objects.equals(price, bookDto.price) && Objects.equals(yearOfPublishing, bookDto.yearOfPublishing) && Objects.equals(title, bookDto.title);
     }
 
+    @Override
     public int hashCode() {
         return Objects.hash(id, author, isbn, numberOfPages, price, yearOfPublishing, title);
     }
 
+    @Override
     public String toString() {
-        return "Book{" +
+        return "BookDto{" +
                 "id=" + id +
                 ", author='" + author + '\'' +
                 ", isbn='" + isbn + '\'' +

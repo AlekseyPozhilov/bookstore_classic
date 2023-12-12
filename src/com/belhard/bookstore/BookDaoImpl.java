@@ -1,7 +1,7 @@
 package com.belhard.bookstore;
 
-import javax.sound.midi.MidiFileFormat;
-import java.security.spec.RSAOtherPrimeInfo;
+import com.belhard.bookstore.entity.Book;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,17 +10,18 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookDaoImplCRUD implements BookDao {
+public class BookDaoImpl implements BookDao {
     public static final String SELECT_ISBN_QUERY = "SELECT id, author, numberOfPages, price, yearOfPublishing, title FROM books";
+    public static final String SELECT_ID_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE id = ?";
     private static final String SELECT_AUTHOR_QUERY = "SELECT id, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE  author  = ?";
     private static final String INSERT_QUERY = "INSERT INTO books (id, author, isbn, numberOfPages, price, yearOfPublishing, title) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String SELECT_QUERY = "SELECT * FROM books WHERE id = ?";
+    private static final String SELECT_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE id = ?";
     private static final String UPDATE_QUERY = "UPDATE books SET author = ?, isbn = ?, numberOfPages = ?, price = ?, yearOfPublishing = ?, title = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM books WHERE id = ?";
     private static final String SELECTABLE_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books";
     private DataSource dataSource;
 
-    public BookDaoImplCRUD(DataSource dataSource) {
+    public BookDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -128,28 +129,31 @@ public class BookDaoImplCRUD implements BookDao {
             throw new RuntimeException(e);
         }
     }
+    @Override
+    public Book findById(Long id) {
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement statement = connection.prepareStatement(SELECT_ID_QUERY);
+            statement.setLong(1,id);
+            ResultSet resultSet = statement.executeQuery();
 
+            if (resultSet.next()){
+                Book book = mapRow(resultSet);
+                return book;
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
     public Book findByIsbn(String isbn) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_ISBN_QUERY);
             statement.setString(1, isbn);
             ResultSet resultSet = statement.executeQuery();
-            Book book = new Book();;
-            if (resultSet.next()) {
-                book.setId(resultSet.getLong("id"));
-                book.setAuthor(resultSet.getString("author"));
-                book.setIsbn(resultSet.getString("isbn"));
-                book.setNumberOfPages(resultSet.getInt("numberOfPages"));
-                book.setPrice(resultSet.getBigDecimal("price"));
-                book.setYearOfPublishing(resultSet.getInt("yearOfPublishing"));
-                book.setTitle(resultSet.getString("title"));
-            }
 
-            if (book != null) {
-                System.out.println("Book found!");
+            if (resultSet.next()) {
+                Book book = mapRow(resultSet);
                 return book;
-            } else {
-                System.out.println("Book with isbn" + isbn + "not  found!");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -165,14 +169,7 @@ public class BookDaoImplCRUD implements BookDao {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Book book = new Book();
-                book.setId(resultSet.getLong("id"));
-                book.setAuthor(resultSet.getString("author"));
-                book.setIsbn(resultSet.getString("isbn"));
-                book.setNumberOfPages(resultSet.getInt("numberOfPages"));
-                book.setPrice(resultSet.getBigDecimal("price"));
-                book.setYearOfPublishing(resultSet.getInt("yearOfPublishing"));
-                book.setTitle(resultSet.getString("title"));
+                Book book = mapRow(resultSet);
                 books.add(book);
             }
         } catch (SQLException e) {
@@ -180,7 +177,17 @@ public class BookDaoImplCRUD implements BookDao {
         }
         return books;
     }
-
+    private static Book mapRow(ResultSet resultSet) throws SQLException {
+        Book book = new Book();
+        book.setId(resultSet.getLong("id"));
+        book.setAuthor(resultSet.getString("author"));
+        book.setIsbn(resultSet.getString("isbn"));
+        book.setNumberOfPages(resultSet.getInt("numberOfPages"));
+        book.setPrice(resultSet.getBigDecimal("price"));
+        book.setYearOfPublishing(resultSet.getInt("yearOfPublishing"));
+        book.setTitle(resultSet.getString("title"));
+        return book;
+    }
     public long countAll() {
         return getAll().size();
     }
