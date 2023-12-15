@@ -69,3 +69,6 @@ VALUES
 (18, 'Charlotte', 'Lewis', 'charlottelewis@example.com', '1988-03-24', 'Female', '+9988776655'),
 (19, 'Benjamin', 'Young', 'benjaminyoung@example.com', '1995-05-11', 'Male', '+1122334455'),
 (20, 'Amelia', 'King', 'ameliaking@example.com', '1991-06-26', 'Female', '+4455667788');
+
+ALTER TABLE users ADD COLUMN password VARCHAR(255);
+UPDATE users SET password = MD5(RANDOM()::text) FROM generate_series(1, 20);

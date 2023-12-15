@@ -7,15 +7,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
-    public static final String INSERT_QUERY = "INSERT INTO users (id, firstName, lastName, email, dateOfBirth, gender, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    public static final String SELECT_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber FROM users WHERE id = ?";
-    public static final String UPDATE_QUERY = "UPDATE users SET firstName = ?, lastName = ?, email = ?, dateOfBirth = ?, gender = ?, phoneNumber = ? WHERE id = ?";
+    public static final String INSERT_QUERY = "INSERT INTO users (id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String SELECT_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE id = ?";
+    public static final String UPDATE_QUERY = "UPDATE users SET firstName = ?, lastName = ?, email = ?, dateOfBirth = ?, gender = ?, phoneNumber = ?, password = ? WHERE id = ?";
     public static final String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
     public static final String COUNT_QUERY = "SELECT COUNT(*) FROM users";
-    public static final String SELECT_BY_EMAIL_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber FROM users WHERE email = ?";
+    public static final String SELECT_BY_EMAIL_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE email = ?";
+    public static final String SELECT_BY_LASTNAME_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE lastName = ?";
+    public static final String SELECT_ALL_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users";
     private DataSource dataSource;
 
     public UserDaoImpl(DataSource dataSource) {
@@ -34,6 +37,7 @@ public class UserDaoImpl implements UserDao {
             statement.setString(5, user.getDateOfBirth());
             statement.setString(6, user.getGender());
             statement.setString(7, user.getPhoneNumber());
+            statement.setString(8, user.getPassword());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -70,6 +74,7 @@ public class UserDaoImpl implements UserDao {
             statement.setString(5, user.getDateOfBirth());
             statement.setString(6, user.getGender());
             statement.setString(7, user.getPhoneNumber());
+            statement.setString(8, user.getPassword());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -78,14 +83,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void delete(User user) {
+    public User delete(int id) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
-            statement.setLong(1, user.getId());
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return null;
     }
 
     @Override
@@ -107,9 +114,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findByLastName(String lastName) {
-        String query = "SELECT * FROM users WHERE lastName = ?";
         List<User> userList = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(SELECT_BY_LASTNAME_QUERY);
             statement.setString(1, lastName);
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -118,6 +125,8 @@ public class UserDaoImpl implements UserDao {
                     userList.add(user);
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         return userList;
@@ -144,6 +153,7 @@ public class UserDaoImpl implements UserDao {
             String dateOfBirth = resultSet.getString("dateOfBirth");
             String gender = resultSet.getString("gender");
             String phoneNumber = resultSet.getString("phoneNumber");
+            String password = resultSet.getString("password");
 
             User user = new User();
             user.setId(id);
@@ -153,10 +163,29 @@ public class UserDaoImpl implements UserDao {
             user.setDateOfBirth(dateOfBirth);
             user.setGender(gender);
             user.setPhoneNumber(phoneNumber);
+            user.setPassword(password);
 
             return user;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<User> getAll() throws SQLException {
+        List<User> users = new ArrayList<>();
+
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                User user = extractUserFromResultSet(resultSet);
+                users.add(user);
+                System.out.printf("user {id = %d, firstName = %s, lastName = %s, email = %s, dateOfBirth = %s, gender = %s, phoneNumber = %s, password = %s}%n", user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getDateOfBirth(), user.getGender(), user.getPhoneNumber(), user.getPassword());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
     }
 }

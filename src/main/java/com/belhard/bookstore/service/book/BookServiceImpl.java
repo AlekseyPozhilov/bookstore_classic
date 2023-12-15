@@ -1,9 +1,8 @@
-package com.belhard.bookstore.service;
+package com.belhard.bookstore.service.book;
 
 import com.belhard.bookstore.dao.book.BookDao;
-import com.belhard.bookstore.dto.BookDto;
+import com.belhard.bookstore.dto.book.BookDto;
 import com.belhard.bookstore.entity.Book;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

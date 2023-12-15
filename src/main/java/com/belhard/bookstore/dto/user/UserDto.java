@@ -1,8 +1,8 @@
-package com.belhard.bookstore.entity;
+package com.belhard.bookstore.dto.user;
 
 import java.util.Objects;
 
-public class User {
+public class UserDto {
     private Long id;
     private String firstName;
     private String lastName;
@@ -80,8 +80,8 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(dateOfBirth, user.dateOfBirth) && Objects.equals(gender, user.gender) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(password, user.password);
+        UserDto userDto = (UserDto) o;
+        return Objects.equals(id, userDto.id) && Objects.equals(firstName, userDto.firstName) && Objects.equals(lastName, userDto.lastName) && Objects.equals(email, userDto.email) && Objects.equals(dateOfBirth, userDto.dateOfBirth) && Objects.equals(gender, userDto.gender) && Objects.equals(phoneNumber, userDto.phoneNumber) && Objects.equals(password, userDto.password);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserDto{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
