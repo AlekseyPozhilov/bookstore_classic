@@ -4,11 +4,16 @@ import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.connection.DataSourceImpl;
 import com.belhard.bookstore.dao.book.BookDaoImpl;
 import com.belhard.bookstore.entity.Book;
+import com.belhard.bookstore.service.user.UserServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MainBook {
+    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
     public static void main(String[] args) {
         PropertiesManager propertiesManager = new PropertiesManager("application.properties");
 
@@ -22,6 +27,7 @@ public class MainBook {
         try (Connection connection = dataSource.getConnection()) {
             consoleApp(dataSource);
         } catch (SQLException e) {
+            logger.error("ERROR");
             throw new RuntimeException(e);
         }
     }
