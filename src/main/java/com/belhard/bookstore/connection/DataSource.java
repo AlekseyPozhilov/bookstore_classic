@@ -1,4 +1,4 @@
-package com.belhard.bookstore;
+package com.belhard.bookstore.connection;
 
 import java.sql.Connection;
 

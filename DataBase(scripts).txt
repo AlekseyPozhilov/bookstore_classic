@@ -1,0 +1,74 @@
+CREATE DATABASE bookstore_pozhilov;
+
+CREATE TABLE books
+(
+   id INT,
+    author VARCHAR(255),
+    isbn VARCHAR(255),
+    numberOfPages INT,
+    price DECIMAL(10,2),
+    yearOfPublishing INT,
+	title VARCHAR(255)
+);
+
+INSERT INTO books (id, author, isbn, numberOfPages, price, yearOfPublishing, title)
+VALUES
+(1, 'J.K. Rowling', '9780545010221', 336, 25.99, 1997,'Загадка синего лотоса'),
+(2, 'George R.R. Martin', '9780553103540', 694, 32.50, 1996,'Тень прошлого'),
+(3, 'Harper Lee', '9780061120084', 376, 15.00, 1960,'Путь великана'),
+(4, 'F. Scott Fitzgerald', '9780743273565', 180, 9.99, 1925,'Лабиринты разума'),
+(5, 'Jane Austen', '9780141439518', 352, 7.99, 1813,'Похититель душ'),
+(6, 'Stephen King', '9781501180989', 1138, 27.99, 1986,'Звездные хроники'),
+(7, 'Markus Zusak', '9780375842207', 552, 12.99, 2005,'Пленники времени'),
+(8, 'Ernest Hemingway', '9780684801469', 127, 10.99, 1926,'Искусство забыть'),
+(9, 'Gabriel Garcia Marquez', '9781410496343', 348, 14.95, 1967,'Искусство забыть'),
+(10, 'Dan Brown', '9780385504218', 593, 9.99, 2003,'Сияние во тьме'),
+(11, 'Margaret Atwood', '9780385721677', 311, 17.00, 1985,'Падение солнечной империи'),
+(12, 'Victor Hugo', '9780451525260', 1488, 14.95, 1862,'Падение солнечной империи'),
+(13, 'J.R.R. Tolkien', '9780618640157', 1178, 23.95, 1954,'Зов предков'),
+(14, 'Leo Tolstoy', '9780143035008', 1392, 16.00, 1869,'Погружение в бездну'),
+(15, 'Herman Melville', '9780142437261', 650, 11.00, 1851,'Крестоносцы душ'),
+(16, 'Charles Dickens', '9780141439600', 720, 8.00, 1859,'Астральный мост'),
+(17, 'Mary Shelley', '9780141439471', 352, 9.99, 1818,'Секреты затерянного острова'),
+(18, 'Arthur Conan Doyle', '9781435142137', 256, 6.99, 1892,'Времена перемен'),
+(19, 'Ray Bradbury', '9781451673319', 249, 13.99, 1953,'Чарующий маг'),
+(20, 'Agatha Christie', '9780062073488', 265, 7.99, 1939,'Собиратель звезд');
+
+----------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE users
+(
+	id INT,
+	firstName VARCHAR(255),
+	lastName VARCHAR(255),
+	email VARCHAR(255),
+	dateOfBirth VARCHAR(255),
+	gender VARCHAR(255),
+	phoneNumber VARCHAR(255)
+);
+
+INSERT INTO users (id, firstName, lastName, email, dateOfBirth, gender, phoneNumber)
+VALUES
+(1, 'John', 'Doe', 'johndoe@example.com', '1990-01-01', 'Male', '+1234567890'),
+(2, 'Jane', 'Smith', 'janesmith@example.com', '1992-05-15', 'Female', '+9876543210'),
+(3, 'David', 'Johnson', 'davidjohnson@example.com', '1985-09-30', 'Male', '+1122334455'),
+(4, 'Emily', 'Brown', 'emilybrown@example.com', '1988-12-12', 'Female', '+9988776655'),
+(5, 'Michael', 'Wilson', 'michaelwilson@example.com', '1993-06-20', 'Male', '+5544332211'),
+(6, 'Sarah', 'Anderson', 'sarahanderson@example.com', '1991-02-18', 'Female', '+6677889900'),
+(7, 'Christopher', 'Martinez', 'christophermartinez@example.com', '1987-07-04', 'Male', '+1122998877'),
+(8, 'Olivia', 'Lee', 'olivialeee@example.com', '1989-11-27', 'Female', '+8899776655'),
+(9, 'Daniel', 'Taylor', 'danieltaylor@example.com', '1995-09-10', 'Male', '+5566778899'),
+(10, 'Sophia', 'Walker', 'sophiawalker@example.com', '1986-03-05', 'Female', '+9988776655'),
+(11, 'Matthew', 'Harris', 'matthewharris@example.com', '1994-08-22', 'Male', '+2233445566'),
+(12, 'Ava', 'Thomas', 'avathomas@example.com', '1998-12-09', 'Female', '+6655443322'),
+(13, 'Andrew', 'White', 'andrewwhite@example.com', '1997-01-14', 'Male', '+8877665544'),
+(14, 'Isabella', 'Robinson', 'isabellarobinson@example.com', '1996-04-27', 'Female', '+9988776655'),
+(15, 'Joseph', 'Clark', 'josephclark@example.com', '1992-07-08', 'Male', '+1122334455'),
+(16, 'Mia', 'Evans', 'miaevans@example.com', '1993-09-16', 'Female', '+3322114466'),
+(17, 'James', 'Hall', 'jameshall@example.com', '1990-11-19', 'Male', '+6655443322'),
+(18, 'Charlotte', 'Lewis', 'charlottelewis@example.com', '1988-03-24', 'Female', '+9988776655'),
+(19, 'Benjamin', 'Young', 'benjaminyoung@example.com', '1995-05-11', 'Male', '+1122334455'),
+(20, 'Amelia', 'King', 'ameliaking@example.com', '1991-06-26', 'Female', '+4455667788');
+
+ALTER TABLE users ADD COLUMN password VARCHAR(255);
+UPDATE users SET password = MD5(RANDOM()::text) FROM generate_series(1, 20);

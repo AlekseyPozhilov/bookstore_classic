@@ -1,4 +1,4 @@
-package com.belhard.bookstore;
+package com.belhard.bookstore.dao.book;
 
 import com.belhard.bookstore.entity.Book;
 

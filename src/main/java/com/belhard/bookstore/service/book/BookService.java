@@ -1,13 +1,12 @@
-package com.belhard.bookstore.service;
+package com.belhard.bookstore.service.book;
 
-import com.belhard.bookstore.BookDto;
+import com.belhard.bookstore.dto.book.BookDto;
 
-import java.sql.SQLException;
 import java.util.List;
 public interface BookService {
     	List<BookDto> findAll();
     	BookDto findById(Long id);
-		BookDto findByIsbn(String isbn) throws SQLException;
+		BookDto findByIsbn(String isbn);
 		List<BookDto> findByAuthor(String author);
     	BookDto create(BookDto dto);
     	BookDto update(BookDto dto);

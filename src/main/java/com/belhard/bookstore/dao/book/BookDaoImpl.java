@@ -1,7 +1,9 @@
-package com.belhard.bookstore;
+package com.belhard.bookstore.dao.book;
 
+import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.entity.Book;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +22,7 @@ public class BookDaoImpl implements BookDao {
     private static final String DELETE_QUERY = "DELETE FROM books WHERE id = ?";
     private static final String SELECTABLE_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books";
     private DataSource dataSource;
+    private static final Logger logger = LogManager.getLogger(BookDaoImpl.class);
 
     public BookDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -27,6 +30,7 @@ public class BookDaoImpl implements BookDao {
 
     public void create(Book book) {
         try (Connection connection = dataSource.getConnection()) {
+            logger.debug("Creating book", book);
             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
             statement.setLong(1, book.getId());
             statement.setString(2, book.getAuthor());
@@ -36,13 +40,16 @@ public class BookDaoImpl implements BookDao {
             statement.setInt(6, book.getYearOfPublishing());
             statement.setString(7, book.getTitle());
             statement.executeUpdate();
+            logger.debug("Book created");
         } catch (SQLException e) {
+            logger.error("Failed to create book: {}", book, e);
             throw new RuntimeException(e);
         }
     }
 
     public Book read(int id) {
         try (Connection connection = dataSource.getConnection()) {
+            logger.debug("Reading book", id);
             PreparedStatement statement = connection.prepareStatement(SELECT_QUERY);
             statement.setInt(1, id);
 
@@ -50,10 +57,13 @@ public class BookDaoImpl implements BookDao {
                 if (resultSet.next()) {
                     return extractBookFromResultSet(resultSet);
                 }
+                logger.debug("Book has been read");
             } catch (SQLException e) {
+                logger.error("Failed to read book: {}", id, e);
                 throw new RuntimeException(e);
             }
         } catch (SQLException e) {
+            logger.error("Failed to read book: {}", id, e);
             throw new RuntimeException(e);
         }
 
@@ -62,6 +72,7 @@ public class BookDaoImpl implements BookDao {
 
     public void update(Book book) {
         try (Connection connection = dataSource.getConnection()) {
+            logger.debug("Updating book", book);
             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
             statement.setString(1, book.getAuthor());
             statement.setString(2, book.getIsbn());
@@ -71,17 +82,22 @@ public class BookDaoImpl implements BookDao {
             statement.setString(6, book.getTitle());
             statement.setLong(7, book.getId());
             statement.executeUpdate();
+            logger.debug("Book updated");
         } catch (SQLException e) {
+            logger.error("Failed to update book: {}", book, e);
             throw new RuntimeException(e);
         }
     }
 
     public Book delete(int id) {
         try (Connection connection = dataSource.getConnection()) {
+            logger.debug("Deleting book", id);
             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
             statement.setInt(1, id);
             statement.executeUpdate();
+            logger.debug("Book deleted");
         } catch (SQLException e) {
+            logger.error("Failed to delete book: {}", id, e);
             throw new RuntimeException(e);
         }
 
@@ -92,6 +108,7 @@ public class BookDaoImpl implements BookDao {
         List<Book> books = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection()) {
+            logger.debug("Get all books");
             PreparedStatement statement = connection.prepareStatement(SELECTABLE_QUERY);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -99,7 +116,9 @@ public class BookDaoImpl implements BookDao {
                 books.add(book);
                 System.out.printf("book {id = %d, author = %s, isbn = %s, numberOfPages = %d, price = %f$, yearOfPublishing = %d, title = %s}%n", book.getId(), book.getAuthor(), book.getIsbn(), book.getNumberOfPages(), book.getPrice(), book.getYearOfPublishing(), book.getTitle());
             }
+            logger.debug("All books received");
         } catch (SQLException e) {
+            logger.error("Failed to find books");
             throw new RuntimeException(e);
         }
         return books;
@@ -132,6 +151,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book findById(Long id) {
         try (Connection connection = dataSource.getConnection()){
+            logger.debug("Fetching book by ID: {}", id);
             PreparedStatement statement = connection.prepareStatement(SELECT_ID_QUERY);
             statement.setLong(1,id);
             ResultSet resultSet = statement.executeQuery();
@@ -140,13 +160,16 @@ public class BookDaoImpl implements BookDao {
                 Book book = mapRow(resultSet);
                 return book;
             }
+            logger.debug("Book received");
         }catch (SQLException e){
+            logger.error("Failed to find book: {}", id, e);
             throw new RuntimeException(e);
         }
         return null;
     }
     public Book findByIsbn(String isbn) {
         try (Connection connection = dataSource.getConnection()) {
+            logger.debug("Fetching book by isbn: {}", isbn);
             PreparedStatement statement = connection.prepareStatement(SELECT_ISBN_QUERY);
             statement.setString(1, isbn);
             ResultSet resultSet = statement.executeQuery();
@@ -155,7 +178,9 @@ public class BookDaoImpl implements BookDao {
                 Book book = mapRow(resultSet);
                 return book;
             }
+            logger.debug("Book received");
         } catch (SQLException e) {
+            logger.error("Failed to find book: {}", isbn, e);
             throw new RuntimeException(e);
         }
         return null;
@@ -164,6 +189,7 @@ public class BookDaoImpl implements BookDao {
     public List<Book> findByAuthor(String author) {
         List<Book> books = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
+            logger.debug("Fetching book by author: {}", author);
             PreparedStatement statement = connection.prepareStatement(SELECT_AUTHOR_QUERY);
             statement.setString(1, author);
             ResultSet resultSet = statement.executeQuery();
@@ -172,7 +198,9 @@ public class BookDaoImpl implements BookDao {
                 Book book = mapRow(resultSet);
                 books.add(book);
             }
+            logger.debug("Book received");
         } catch (SQLException e) {
+            logger.error("Failed to find book: {}", author, e);
             throw new RuntimeException(e);
         }
         return books;
