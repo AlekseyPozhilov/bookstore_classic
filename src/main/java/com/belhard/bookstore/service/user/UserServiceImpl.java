@@ -13,7 +13,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
     private final UserDao userDao;
-
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -165,6 +164,28 @@ public class UserServiceImpl implements UserService {
             return dtos;
         } catch (SQLException e) {
             logger.error("Failed to find user: {}", lastName, e);
+            throw new RuntimeException(e);
+        }
+    }
+    public UserDto findById(Long id) {
+        try {
+        logger.debug("Fetching user by ID: {}", id);
+
+        User userEntity = userDao.read((long) Math.toIntExact(id));
+        UserDto dto = new UserDto();
+        dto.setId(userEntity.getId());
+        dto.setFirstName(userEntity.getFirstName());
+        dto.setLastName(userEntity.getLastName());
+        dto.setEmail(userEntity.getEmail());
+        dto.setDateOfBirth(userEntity.getDateOfBirth());
+        dto.setGender(userEntity.getGender());
+        dto.setPhoneNumber(userEntity.getPhoneNumber());
+        dto.setPassword(userEntity.getPassword());
+
+        logger.debug("User received", dto);
+        return dto;
+        } catch (SQLException e) {
+            logger.error("Failed to find user: {}", id, e);
             throw new RuntimeException(e);
         }
     }

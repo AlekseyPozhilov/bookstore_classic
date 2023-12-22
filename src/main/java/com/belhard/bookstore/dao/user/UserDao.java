@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserDao {
     void create(User user) throws SQLException;
 
-    User read(int id) throws SQLException;
+    User read(Long id) throws SQLException;
 
     void update(User user) throws SQLException;
 

@@ -51,7 +51,7 @@ public class MainUser {
                     case "get":
                         System.out.println("Enter ID user: ");
                         int userId = scanner.nextInt();
-                        User user = crud.read(userId);
+                        User user = crud.read((long) userId);
                         if (user != null) {
                             System.out.println(user.toString());
                         } else {
