@@ -12,7 +12,7 @@ public interface UserDao {
 
     void update(User user) throws SQLException;
 
-    User delete(int id) throws SQLException;
+    User delete(Long id) throws SQLException;
 
     User findByEmail(String email) throws SQLException;
 

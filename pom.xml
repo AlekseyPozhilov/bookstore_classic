@@ -68,7 +68,8 @@
                 <version>3.3.2</version>
                 <configuration>
                     <warName>bookstore</warName>
-                    <outputDirectory>${env.CATALINA_HOME}/webapps</outputDirectory>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <!--<outputDirectory>${env.CATALINA_HOME}/webapps</outputDirectory>-->
                 </configuration>
             </plugin>
 

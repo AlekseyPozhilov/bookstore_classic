@@ -5,7 +5,6 @@ import com.belhard.bookstore.dto.user.UserDto;
 import com.belhard.bookstore.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +100,7 @@ public class UserServiceImpl implements UserService {
         try {
             logger.debug("Deleting user: {}", id);
 
-            userDao.delete(Math.toIntExact(id));
+            userDao.delete(id);
 
             logger.debug("User deleted: {}", id);
         } catch (SQLException e) {
@@ -109,14 +108,14 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public UserDto findByEmail(String email) {
         try {
             logger.debug("Fetching user by email: {}", email);
             User userEntity = userDao.findByEmail(email);
 
             if (userEntity == null) {
-                throw new IllegalArgumentException("User with email" + email + "not found");
+                throw new IllegalArgumentException("User with email " + email + " not found");
             }
 
             UserDto dto = new UserDto();
@@ -137,7 +136,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public List<UserDto> findByLastName(String lastName) {
         try {
             logger.debug("Fetching user by lastName: {}", lastName);
@@ -167,11 +166,12 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
+    @Override
     public UserDto findById(Long id) {
         try {
         logger.debug("Fetching user by ID: {}", id);
 
-        User userEntity = userDao.read((long) Math.toIntExact(id));
+        User userEntity = userDao.read(id);
         UserDto dto = new UserDto();
         dto.setId(userEntity.getId());
         dto.setFirstName(userEntity.getFirstName());

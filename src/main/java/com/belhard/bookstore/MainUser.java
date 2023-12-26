@@ -61,7 +61,7 @@ public class MainUser {
                     case "delete":
                         System.out.println("Enter ID user: ");
                         int userIdDel = scanner.nextInt();
-                        User deletedUser = crud.delete(userIdDel);
+                        User deletedUser = crud.delete((long) userIdDel);
                         if (deletedUser != null) {
                             System.out.println(deletedUser.toString());
                             System.out.println("Book deleted!");
