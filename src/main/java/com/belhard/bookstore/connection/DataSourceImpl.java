@@ -12,18 +12,22 @@ public class DataSourceImpl implements DataSource {
     private  final String url ;
     private final String user;
     private final String password ;
-    public DataSourceImpl(String url, String user, String password) {
+    private final String drv;
+    public DataSourceImpl(String url, String user, String password, String drv) {
         this.url = url;
         this.user = user;
         this.password = password;
+        this.drv = drv;
     }
-
     public Connection getConnection(){
         try {
             logger.info("Сonnection to the database is being established...");
+            Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             logger.error("Error with connection");
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

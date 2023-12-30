@@ -1,6 +1,7 @@
 package com.belhard.bookstore.controller;
 
 import com.belhard.bookstore.controller.book.BookController;
+import com.belhard.bookstore.controller.book.BooksController;
 import com.belhard.bookstore.controller.user.UserController;
 import com.belhard.bookstore.controller.user.UsersController;
 import jakarta.servlet.ServletException;
@@ -28,6 +29,10 @@ public class FrontController extends HttpServlet {
             case "book" -> {
                 BookController bookController = new BookController();
                 bookController.doGet(req, resp);
+            }
+            case "books" ->{
+                BooksController booksController = new BooksController();
+                booksController.doGet(req,resp);
             }
             default -> {
                 throw new RuntimeException();

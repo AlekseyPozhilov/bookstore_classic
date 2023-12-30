@@ -1,7 +1,8 @@
 package com.belhard.bookstore.controller.book;
 
+import com.belhard.bookstore.connection.DataSourceImpl;
+import com.belhard.bookstore.dao.book.BookDaoImpl;
 import com.belhard.bookstore.dto.book.BookDto;
-import com.belhard.bookstore.entity.Book;
 import com.belhard.bookstore.service.book.BookService;
 import com.belhard.bookstore.service.book.BookServiceImpl;
 import jakarta.servlet.ServletException;
@@ -21,16 +22,24 @@ import java.io.IOException;
 @WebServlet("/book")
 public class BookController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(BookServiceImpl.class);
-    private BookService bookService;
+    private static final String URL = "jdbc:postgresql://127.0.0.1:5432/bookstore_pozhilov";
+    private static final String USR = "postgres";
+    private static final String PSW = "root";
+    private static final String DRV = "org.postgresql.Driver";
+    private BookService bookService = new BookServiceImpl(new BookDaoImpl(new DataSourceImpl(URL, USR, PSW, DRV)));
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
-            String bookId = request.getParameter("id");
-            Long id = Long.parseLong(bookId);
-            BookDto book = bookService.findById(id);
-            request.setAttribute("book", book);
-            request.getRequestDispatcher("jsp/book.jsp").forward(request, response);
-
+            if (bookService != null) {
+                String bookId = request.getParameter("id");
+                Long id = Long.parseLong(bookId);
+                BookDto book = bookService.findById(id);
+                request.setAttribute("book", book);
+                request.getRequestDispatcher("jsp/book.jsp").forward(request, response);
+            }else {
+                logger.error("BookService is null");
+                throw new RuntimeException("BookService is not available");
+            }
         } catch (ServletException e) {
             logger.error("Failed {}", e);
             throw new RuntimeException(e);

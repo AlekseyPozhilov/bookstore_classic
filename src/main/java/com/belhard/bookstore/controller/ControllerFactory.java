@@ -8,6 +8,5 @@ public class ControllerFactory {
     private UsersController usersController;
 
     public ControllerFactory() {
-
     }
 }

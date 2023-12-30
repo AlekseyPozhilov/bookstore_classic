@@ -24,10 +24,10 @@ import java.io.IOException;
 public class UserController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(BookServiceImpl.class);
     private static final String URL = "jdbc:postgresql://127.0.0.1:5432/bookstore_pozhilov";
-    private static final String PSW = "root";
     private static final String USR = "postgres";
+    private static final String PSW = "root";
     private static final String DRV = "org.postgresql.Driver";
-    private UserService userService = new UserServiceImpl(new UserDaoImpl(new DataSourceImpl(URL, PSW, USR)));
+    private UserService userService = new UserServiceImpl(new UserDaoImpl(new DataSourceImpl(URL, USR, PSW, DRV)));
 
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -36,7 +36,6 @@ public class UserController extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
-            Class.forName(DRV); //???????????????????????????
             if (userService != null) {
                 String userId = request.getParameter("id");
                 Long id = Long.parseLong(userId);
@@ -52,8 +51,6 @@ public class UserController extends HttpServlet {
             throw new RuntimeException(e);
         } catch (ServletException | IOException e) {
             logger.error("Failed to process request: {}", e.getMessage());
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
