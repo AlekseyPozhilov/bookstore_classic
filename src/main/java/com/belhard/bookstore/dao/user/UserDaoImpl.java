@@ -53,7 +53,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User read(int id) {
+    public User read(Long id) {
         try (Connection connection = dataSource.getConnection()) {
             logger.debug("Reading user", id);
             PreparedStatement statement = connection.prepareStatement(SELECT_QUERY);
@@ -98,7 +98,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User delete(int id) {
+    public User delete(Long id) {
         try (Connection connection = dataSource.getConnection()) {
             logger.debug("Deleting user", id);
             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);

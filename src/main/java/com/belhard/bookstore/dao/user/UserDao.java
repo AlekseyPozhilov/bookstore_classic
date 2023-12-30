@@ -8,11 +8,11 @@ import java.util.List;
 public interface UserDao {
     void create(User user) throws SQLException;
 
-    User read(int id) throws SQLException;
+    User read(Long id) throws SQLException;
 
     void update(User user) throws SQLException;
 
-    User delete(int id) throws SQLException;
+    User delete(Long id) throws SQLException;
 
     User findByEmail(String email) throws SQLException;
 

@@ -16,4 +16,5 @@ public interface UserService {
     UserDto findByEmail(String email);
 
     List<UserDto> findByLastName(String lastName);
+    UserDto findById(Long id);
 }

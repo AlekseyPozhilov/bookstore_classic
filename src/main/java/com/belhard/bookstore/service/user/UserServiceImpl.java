@@ -5,7 +5,6 @@ import com.belhard.bookstore.dto.user.UserDto;
 import com.belhard.bookstore.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
     private final UserDao userDao;
-
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -102,7 +100,7 @@ public class UserServiceImpl implements UserService {
         try {
             logger.debug("Deleting user: {}", id);
 
-            userDao.delete(Math.toIntExact(id));
+            userDao.delete(id);
 
             logger.debug("User deleted: {}", id);
         } catch (SQLException e) {
@@ -110,14 +108,14 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public UserDto findByEmail(String email) {
         try {
             logger.debug("Fetching user by email: {}", email);
             User userEntity = userDao.findByEmail(email);
 
             if (userEntity == null) {
-                throw new IllegalArgumentException("User with email" + email + "not found");
+                throw new IllegalArgumentException("User with email " + email + " not found");
             }
 
             UserDto dto = new UserDto();
@@ -138,7 +136,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public List<UserDto> findByLastName(String lastName) {
         try {
             logger.debug("Fetching user by lastName: {}", lastName);
@@ -165,6 +163,29 @@ public class UserServiceImpl implements UserService {
             return dtos;
         } catch (SQLException e) {
             logger.error("Failed to find user: {}", lastName, e);
+            throw new RuntimeException(e);
+        }
+    }
+    @Override
+    public UserDto findById(Long id) {
+        try {
+        logger.debug("Fetching user by ID: {}", id);
+
+        User userEntity = userDao.read(id);
+        UserDto dto = new UserDto();
+        dto.setId(userEntity.getId());
+        dto.setFirstName(userEntity.getFirstName());
+        dto.setLastName(userEntity.getLastName());
+        dto.setEmail(userEntity.getEmail());
+        dto.setDateOfBirth(userEntity.getDateOfBirth());
+        dto.setGender(userEntity.getGender());
+        dto.setPhoneNumber(userEntity.getPhoneNumber());
+        dto.setPassword(userEntity.getPassword());
+
+        logger.debug("User received", dto);
+        return dto;
+        } catch (SQLException e) {
+            logger.error("Failed to find user: {}", id, e);
             throw new RuntimeException(e);
         }
     }

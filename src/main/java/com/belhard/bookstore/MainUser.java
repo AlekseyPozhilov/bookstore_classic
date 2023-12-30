@@ -16,8 +16,9 @@ public class MainUser {
         String url = propertiesManager.getKey("my.app.db." + profile + ".url");
         String user = propertiesManager.getKey("my.app.db." + profile + ".user");
         String password = propertiesManager.getKey("my.app.db." + profile + ".password");
+        String drv = propertiesManager.getKey("my.app.db." + profile + ".drv");
 
-        DataSourceImpl dataSource = new DataSourceImpl(url, user, password);
+        DataSourceImpl dataSource = new DataSourceImpl(url, user, password, drv);
 
         try (Connection connection = dataSource.getConnection()) {
             consoleApp(dataSource);
@@ -51,7 +52,7 @@ public class MainUser {
                     case "get":
                         System.out.println("Enter ID user: ");
                         int userId = scanner.nextInt();
-                        User user = crud.read(userId);
+                        User user = crud.read((long) userId);
                         if (user != null) {
                             System.out.println(user.toString());
                         } else {
@@ -61,7 +62,7 @@ public class MainUser {
                     case "delete":
                         System.out.println("Enter ID user: ");
                         int userIdDel = scanner.nextInt();
-                        User deletedUser = crud.delete(userIdDel);
+                        User deletedUser = crud.delete((long) userIdDel);
                         if (deletedUser != null) {
                             System.out.println(deletedUser.toString());
                             System.out.println("Book deleted!");
