@@ -6,4 +6,4 @@
 <li><a href="bookstore?command=books">All Books</a></li>
 <li><a href="bookstore?command=users">All Users</a></li>
 <li><a href="bookstore?command=orders">All Orders</a></li>
-</ul> --%>
+</ul>

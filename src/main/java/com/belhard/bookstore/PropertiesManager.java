@@ -1,14 +1,13 @@
 package com.belhard.bookstore;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+@Log4j2
 public class PropertiesManager {
-    private static final Logger logger = LogManager.getLogger(PropertiesManager.class);
     private final Properties properties;
 
     public PropertiesManager(String fileName) {
@@ -16,7 +15,7 @@ public class PropertiesManager {
             properties = new Properties();
             properties.load(fis);
         } catch (IOException e) {
-            logger.error("ERROR");
+            log.error("ERROR");
             throw new RuntimeException(e);
         }
     }

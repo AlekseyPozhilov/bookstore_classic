@@ -1,14 +1,13 @@
 package com.belhard.bookstore.connection;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Log4j2
 public class DataSourceImpl implements DataSource {
-    private static final Logger logger = LogManager.getLogger(DataSourceImpl.class);
     private  final String url ;
     private final String user;
     private final String password ;
@@ -21,11 +20,11 @@ public class DataSourceImpl implements DataSource {
     }
     public Connection getConnection(){
         try {
-            logger.info("Сonnection to the database is being established...");
+            log.info("Сonnection to the database is being established...");
             Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
-            logger.error("Error with connection");
+            log.error("Error with connection");
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

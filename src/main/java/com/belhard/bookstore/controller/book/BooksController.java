@@ -22,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @WebServlet("/books")
 public class BooksController extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(BookServiceImpl.class);
     private static final String URL = "jdbc:postgresql://127.0.0.1:5432/bookstore_pozhilov";
     private static final String USR = "postgres";
     private static final String PSW = "root";
@@ -34,16 +33,16 @@ public class BooksController extends HttpServlet {
             if (bookService != null) {
                 List<BookDto> books = bookService.findAll();
                 request.setAttribute("books", books);
-                request.getRequestDispatcher("jsp/books.jsp").forward(request, response);
+                request.getRequestDispatcher("jsp/book/books.jsp").forward(request, response);
             } else {
-                logger.error("BookService is null");
+                log.error("BookService is null");
                 throw new RuntimeException("BookService is not available");
             }
         } catch (ServletException e) {
-            logger.error("Failed {}", e);
+            log.error("Failed {}", e);
             throw new RuntimeException(e);
         } catch (IOException e) {
-            logger.error("Failed {}", e);
+            log.error("Failed {}", e);
             throw new RuntimeException(e);
         }
     }
