@@ -69,7 +69,7 @@
                 <configuration>
                     <warName>bookstore</warName>
                     <outputDirectory>${project.build.directory}</outputDirectory>
-                    <!--<outputDirectory>${env.CATALINA_HOME}/webapps</outputDirectory>-->
+                    <!-- <outputDirectory>${env.CATALINA_HOME}/webapps</outputDirectory> -->
                 </configuration>
             </plugin>
 

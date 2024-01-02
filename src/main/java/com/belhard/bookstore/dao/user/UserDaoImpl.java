@@ -2,8 +2,7 @@ package com.belhard.bookstore.dao.user;
 
 import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.entity.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 public class UserDaoImpl implements UserDao {
     public static final String INSERT_QUERY = "INSERT INTO users (id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String SELECT_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE id = ?";
@@ -22,7 +22,6 @@ public class UserDaoImpl implements UserDao {
     public static final String SELECT_BY_LASTNAME_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE lastName = ?";
     public static final String SELECT_ALL_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users";
     private DataSource dataSource;
-    private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
 
     public UserDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -31,7 +30,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void create(User user) {
         try (Connection connection = dataSource.getConnection()) {
-            logger.debug("Creating user", user);
+            log.debug("Creating user", user);
 
             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
             statement.setLong(1, user.getId());
@@ -45,9 +44,9 @@ public class UserDaoImpl implements UserDao {
 
             statement.executeUpdate();
 
-            logger.debug("User created");
+            log.debug("User created");
         } catch (SQLException e) {
-            logger.error("Failed to create user: {}", user, e);
+            log.error("Failed to create user: {}", user, e);
             throw new RuntimeException(e);
         }
     }
@@ -55,21 +54,21 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User read(Long id) {
         try (Connection connection = dataSource.getConnection()) {
-            logger.debug("Reading user", id);
+            log.debug("Reading user", id);
             PreparedStatement statement = connection.prepareStatement(SELECT_QUERY);
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return extractUserFromResultSet(resultSet);
                 }
-                logger.debug("User has been read");
+                log.debug("User has been read");
             } catch (SQLException e) {
-                logger.error("Failed to read user: {}", id, e);
+                log.error("Failed to read user: {}", id, e);
                 throw new RuntimeException(e);
             }
 
         } catch (SQLException e) {
-            logger.error("Failed to read user: {}", id, e);
+            log.error("Failed to read user: {}", id, e);
             throw new RuntimeException(e);
         }
         return null;
@@ -78,7 +77,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void update(User user) {
         try (Connection connection = dataSource.getConnection()) {
-            logger.debug("Updating user", user);
+            log.debug("Updating user", user);
             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
             statement.setLong(1, user.getId());
             statement.setString(2, user.getFirstName());
@@ -90,9 +89,9 @@ public class UserDaoImpl implements UserDao {
             statement.setString(8, user.getPassword());
             statement.executeUpdate();
 
-            logger.debug("User updated");
+            log.debug("User updated");
         } catch (SQLException e) {
-            logger.error("Failed to update user: {}", user, e);
+            log.error("Failed to update user: {}", user, e);
             throw new RuntimeException();
         }
     }
@@ -100,13 +99,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User delete(Long id) {
         try (Connection connection = dataSource.getConnection()) {
-            logger.debug("Deleting user", id);
+            log.debug("Deleting user", id);
             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
             statement.setLong(1, id);
             statement.executeUpdate();
-            logger.debug("User deleted");
+            log.debug("User deleted");
         } catch (SQLException e) {
-            logger.error("Failed to delete user: {}", id, e);
+            log.error("Failed to delete user: {}", id, e);
             throw new RuntimeException(e);
         }
 
@@ -116,7 +115,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findByEmail(String email) {
         try (Connection connection = dataSource.getConnection()) {
-            logger.debug("Fetching user by email: {}", email);
+            log.debug("Fetching user by email: {}", email);
 
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_EMAIL_QUERY);
             statement.setString(1, email);
@@ -124,10 +123,10 @@ public class UserDaoImpl implements UserDao {
                 if (resultSet.next()) {
                     return extractUserFromResultSet(resultSet);
                 }
-                logger.debug("User received");
+                log.debug("User received");
             }
         } catch (SQLException e) {
-            logger.error("Failed to find user: {}", email, e);
+            log.error("Failed to find user: {}", email, e);
             throw new RuntimeException(e);
         }
 
@@ -138,7 +137,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> findByLastName(String lastName) {
         List<User> userList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
-            logger.debug("Fetching user by lastName: {}", lastName);
+            log.debug("Fetching user by lastName: {}", lastName);
 
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_LASTNAME_QUERY);
             statement.setString(1, lastName);
@@ -148,10 +147,10 @@ public class UserDaoImpl implements UserDao {
                     User user = extractUserFromResultSet(resultSet);
                     userList.add(user);
                 }
-                logger.debug("User received");
+                log.debug("User received");
             }
         } catch (SQLException e) {
-            logger.error("Failed to find user: {}", lastName, e);
+            log.error("Failed to find user: {}", lastName, e);
             throw new RuntimeException(e);
         }
 
@@ -167,7 +166,7 @@ public class UserDaoImpl implements UserDao {
                 return resultSet.getLong(1);
             }
         } catch (SQLException e){
-            logger.error("ERROR");
+            log.error("ERROR");
             throw new RuntimeException(e);
         }
         return 0;
@@ -196,7 +195,7 @@ public class UserDaoImpl implements UserDao {
 
             return user;
         } catch (SQLException e) {
-            logger.error("ERROR");
+            log.error("ERROR");
             throw new RuntimeException(e);
         }
     }
@@ -206,7 +205,7 @@ public class UserDaoImpl implements UserDao {
         List<User> users = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection()) {
-            logger.debug("Get all users");
+            log.debug("Get all users");
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -214,9 +213,9 @@ public class UserDaoImpl implements UserDao {
                 users.add(user);
                 System.out.printf("user {id = %d, firstName = %s, lastName = %s, email = %s, dateOfBirth = %s, gender = %s, phoneNumber = %s, password = %s}%n", user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getDateOfBirth(), user.getGender(), user.getPhoneNumber(), user.getPassword());
             }
-            logger.debug("All users received");
+            log.debug("All users received");
         } catch (SQLException e) {
-            logger.error("Failed to find users", e);
+            log.error("Failed to find users", e);
             throw new RuntimeException(e);
         }
         return users;

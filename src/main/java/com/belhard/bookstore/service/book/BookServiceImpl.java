@@ -3,14 +3,14 @@ package com.belhard.bookstore.service.book;
 import com.belhard.bookstore.dao.book.BookDao;
 import com.belhard.bookstore.dto.book.BookDto;
 import com.belhard.bookstore.entity.Book;
+import lombok.extern.log4j.Log4j2;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+@Log4j2
 public class BookServiceImpl implements BookService {
-    private static final Logger logger = LogManager.getLogger(BookServiceImpl.class);
     private final BookDao bookDao;
 
     public BookServiceImpl(BookDao bookDao) {
@@ -20,7 +20,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> findAll() {
         try {
-            logger.debug("Fetching all books");
+            log.debug("Fetching all books");
 
             List<Book> bookEntities = bookDao.getAll();
             List<BookDto> dtos = new ArrayList<>();
@@ -36,18 +36,18 @@ public class BookServiceImpl implements BookService {
                 dtos.add(dto);
             }
 
-            logger.debug("All books received");
+            log.debug("All books received");
 
             return dtos;
         } catch (SQLException e) {
-            logger.error("Failed to find books", e);
+            log.error("Failed to find books", e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public BookDto findById(Long id) {
-        logger.debug("Fetching book by ID: {}", id);
+        log.debug("Fetching book by ID: {}", id);
 
         Book bookEntity = bookDao.findById(id);
         BookDto dto = new BookDto();
@@ -59,13 +59,13 @@ public class BookServiceImpl implements BookService {
         dto.setYearOfPublishing(bookEntity.getYearOfPublishing());
         dto.setTitle(bookEntity.getTitle());
 
-        logger.debug("Book received", dto);
+        log.debug("Book received", dto);
         return dto;
     }
 
     public BookDto findByIsbn(String isbn) {
         try {
-            logger.debug("Fetching book by ISBN: {}", isbn);
+            log.debug("Fetching book by ISBN: {}", isbn);
             Book bookEntity = bookDao.findByIsbn(isbn);
             BookDto dto = new BookDto();
             dto.setId(bookEntity.getId());
@@ -76,11 +76,11 @@ public class BookServiceImpl implements BookService {
             dto.setYearOfPublishing(bookEntity.getYearOfPublishing());
             dto.setTitle(bookEntity.getTitle());
 
-            logger.debug("Book received: {}", dto);
+            log.debug("Book received: {}", dto);
 
             return dto;
         } catch (SQLException e) {
-            logger.error("Failed to find book: {}", isbn, e);
+            log.error("Failed to find book: {}", isbn, e);
             throw new RuntimeException(e);
         }
     }
@@ -88,7 +88,7 @@ public class BookServiceImpl implements BookService {
     public List<BookDto> findByAuthor(String author) {
         List<BookDto> dtos = new ArrayList<>();
         try {
-            logger.debug("Fetching book by author: {}", author);
+            log.debug("Fetching book by author: {}", author);
 
             List<Book> bookEntities = bookDao.findByAuthor(author);
 
@@ -104,11 +104,11 @@ public class BookServiceImpl implements BookService {
                 dtos.add(dto);
             }
 
-            logger.debug("Book received");
+            log.debug("Book received");
 
             return dtos;
         } catch (SQLException e) {
-            logger.error("Failed to find book: {}", author, e);
+            log.error("Failed to find book: {}", author, e);
             throw new RuntimeException(e);
         }
     }
@@ -116,7 +116,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto create(BookDto dto) {
         try {
-            logger.debug("Creating book: {}", dto);
+            log.debug("Creating book: {}", dto);
             Book bookEntity = new Book();
             bookEntity.setAuthor(dto.getAuthor());
             bookEntity.setIsbn(dto.getIsbn());
@@ -127,11 +127,11 @@ public class BookServiceImpl implements BookService {
 
             bookDao.create(bookEntity);
 
-            logger.debug("book created: {}", bookEntity);
+            log.debug("book created: {}", bookEntity);
 
             return dto;
         } catch (SQLException e) {
-            logger.error("Failed to create book: {}", dto, e);
+            log.error("Failed to create book: {}", dto, e);
             throw new RuntimeException(e);
         }
     }
@@ -139,7 +139,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto update(BookDto dto) {
         try {
-            logger.debug("Updating book: {}", dto);
+            log.debug("Updating book: {}", dto);
             Book bookEntity = new Book();
             bookEntity.setId(dto.getId());
             bookEntity.setAuthor(dto.getAuthor());
@@ -151,11 +151,11 @@ public class BookServiceImpl implements BookService {
 
             bookDao.update(bookEntity);
 
-            logger.debug("Book updated: {}", bookEntity);
+            log.debug("Book updated: {}", bookEntity);
 
             return dto;
         } catch (SQLException e) {
-            logger.error("Failed to update book: {}", dto, e);
+            log.error("Failed to update book: {}", dto, e);
             throw new RuntimeException(e);
         }
     }
@@ -163,13 +163,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public void delete(Long id) {
         try {
-            logger.debug("Deleting book: {}", id);
+            log.debug("Deleting book: {}", id);
 
             bookDao.delete(Math.toIntExact(id));
 
-            logger.debug("Book deleted: {}", id);
+            log.debug("Book deleted: {}", id);
         } catch (SQLException e) {
-            logger.error("Failed to delete book: {}", id, e);
+            log.error("Failed to delete book: {}", id, e);
             throw new RuntimeException(e);
         }
     }
