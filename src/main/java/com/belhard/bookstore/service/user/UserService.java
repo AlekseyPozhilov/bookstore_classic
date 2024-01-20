@@ -1,5 +1,6 @@
 package com.belhard.bookstore.service.user;
 
+import com.belhard.bookstore.dto.user.CreateUserDto;
 import com.belhard.bookstore.dto.user.UserDto;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 public interface UserService {
     List<UserDto> findAll();
 
-    UserDto create(UserDto dto);
+    UserDto create(CreateUserDto dto);
 
     UserDto update(UserDto dto);
 

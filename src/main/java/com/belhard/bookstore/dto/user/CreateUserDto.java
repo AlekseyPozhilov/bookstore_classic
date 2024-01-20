@@ -1,9 +1,9 @@
 package com.belhard.bookstore.dto.user;
 
 import lombok.Data;
+
 @Data
-public class UserDto {
-    private Long id;
+public class CreateUserDto {
     private String firstName;
     private String lastName;
     private String email;

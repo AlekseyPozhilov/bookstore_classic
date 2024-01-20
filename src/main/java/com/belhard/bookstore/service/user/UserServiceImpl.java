@@ -1,6 +1,7 @@
 package com.belhard.bookstore.service.user;
 
 import com.belhard.bookstore.dao.user.UserDao;
+import com.belhard.bookstore.dto.user.CreateUserDto;
 import com.belhard.bookstore.dto.user.UserDto;
 import com.belhard.bookstore.entity.User;
 import lombok.extern.log4j.Log4j2;
@@ -24,15 +25,7 @@ public class UserServiceImpl implements UserService {
             List<UserDto> userDtos = new ArrayList<>();
 
             for (User user : users) {
-                UserDto userDto = new UserDto();
-                userDto.setId(user.getId());
-                userDto.setFirstName(user.getFirstName());
-                userDto.setLastName(user.getLastName());
-                userDto.setEmail(user.getEmail());
-                userDto.setDateOfBirth(user.getDateOfBirth());
-                userDto.setGender(user.getGender());
-                userDto.setPhoneNumber(user.getPhoneNumber());
-                userDto.setPassword(user.getPassword());
+                UserDto userDto = userReadDto(user);
 
                 userDtos.add(userDto);
             }
@@ -47,27 +40,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto create(UserDto dto) {
+    public UserDto create(CreateUserDto dto) {
         try {
             log.debug("Creating user: {}", dto);
             User userEntity = new User();
-            userEntity.setFirstName(dto.getFirstName());
-            userEntity.setLastName(dto.getLastName());
-            userEntity.setEmail(dto.getEmail());
-            userEntity.setDateOfBirth(dto.getDateOfBirth());
-            userEntity.setGender(dto.getGender());
-            userEntity.setPhoneNumber(dto.getPhoneNumber());
-            userEntity.setPassword(dto.getPassword());
-
-            userDao.create(userEntity);
+            User user = toEntity(dto);
+            User created = userDao.create(user);
 
             log.debug("User created: {}", userEntity);
 
-            return dto;
+            return userReadDto(created);
         } catch (SQLException e) {
             log.error("Failed to create user: {}", dto, e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static User toEntity(CreateUserDto dto) {
+        User userEntity = new User();
+        userEntity.setFirstName(dto.getFirstName());
+        userEntity.setLastName(dto.getLastName());
+        userEntity.setEmail(dto.getEmail());
+        userEntity.setDateOfBirth(dto.getDateOfBirth());
+        userEntity.setGender(dto.getGender());
+        userEntity.setPhoneNumber(dto.getPhoneNumber());
+        userEntity.setPassword(dto.getPassword());
+        return userEntity;
     }
 
     @Override
@@ -118,15 +116,7 @@ public class UserServiceImpl implements UserService {
                 throw new IllegalArgumentException("User with email " + email + " not found");
             }
 
-            UserDto dto = new UserDto();
-            dto.setId(userEntity.getId());
-            dto.setFirstName(userEntity.getFirstName());
-            dto.setLastName(userEntity.getLastName());
-            dto.setEmail(userEntity.getEmail());
-            dto.setDateOfBirth(userEntity.getDateOfBirth());
-            dto.setGender(userEntity.getGender());
-            dto.setPhoneNumber(userEntity.getPhoneNumber());
-            dto.setPassword(userEntity.getPassword());
+            UserDto dto = userReadDto(userEntity);
 
             log.debug("User received: {}", dto);
 
@@ -136,6 +126,20 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
+
+    private static UserDto userReadDto(User userEntity) {
+        UserDto dto = new UserDto();
+        dto.setId(userEntity.getId());
+        dto.setFirstName(userEntity.getFirstName());
+        dto.setLastName(userEntity.getLastName());
+        dto.setEmail(userEntity.getEmail());
+        dto.setDateOfBirth(userEntity.getDateOfBirth());
+        dto.setGender(userEntity.getGender());
+        dto.setPhoneNumber(userEntity.getPhoneNumber());
+        dto.setPassword(userEntity.getPassword());
+        return dto;
+    }
+
     @Override
     public List<UserDto> findByLastName(String lastName) {
         try {
@@ -145,15 +149,7 @@ public class UserServiceImpl implements UserService {
             List<UserDto> dtos = new ArrayList<>();
 
             for (User userEntity : userEntities) {
-                UserDto dto = new UserDto();
-                dto.setId(userEntity.getId());
-                dto.setFirstName(userEntity.getFirstName());
-                dto.setLastName(userEntity.getLastName());
-                dto.setEmail(userEntity.getEmail());
-                dto.setDateOfBirth(userEntity.getDateOfBirth());
-                dto.setGender(userEntity.getGender());
-                dto.setPhoneNumber(userEntity.getPhoneNumber());
-                dto.setPassword(userEntity.getPassword());
+                UserDto dto = userReadDto(userEntity);
 
                 dtos.add(dto);
             }
@@ -172,17 +168,9 @@ public class UserServiceImpl implements UserService {
         log.debug("Fetching user by ID: {}", id);
 
         User userEntity = userDao.read(id);
-        UserDto dto = new UserDto();
-        dto.setId(userEntity.getId());
-        dto.setFirstName(userEntity.getFirstName());
-        dto.setLastName(userEntity.getLastName());
-        dto.setEmail(userEntity.getEmail());
-        dto.setDateOfBirth(userEntity.getDateOfBirth());
-        dto.setGender(userEntity.getGender());
-        dto.setPhoneNumber(userEntity.getPhoneNumber());
-        dto.setPassword(userEntity.getPassword());
+            UserDto dto = userReadDto(userEntity);
 
-        log.debug("User received", dto);
+            log.debug("User received", dto);
         return dto;
         } catch (SQLException e) {
             log.error("Failed to find user: {}", id, e);

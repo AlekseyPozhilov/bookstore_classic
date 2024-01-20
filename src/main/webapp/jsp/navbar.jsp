@@ -5,5 +5,5 @@
 <li><a href="bookstore?command=books">All Books</a></li>
 <li><a href="bookstore?command=users">All Users</a></li>
 <li><a href="bookstore?command=orders">All Orders</a></li>
-<li><a href="bookstore?command=createUserForm">Sign up</a></li>
+<li><a href="bookstore?command=create_user_form">Sign up</a></li>
 </ul>

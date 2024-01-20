@@ -1,11 +1,10 @@
-package com.belhard.bookstore.commands;
+package com.belhard.bookstore.controller.create;
 
 import com.belhard.bookstore.controller.Controller;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class CreateUserCommand implements Controller {
+public class CreateBookController implements Controller {
     public String execute(HttpServletRequest req) {
-        return "jsp/user/createUserForm.jsp";
+        return "jsp/createBookForm.jsp";
     }
-
 }

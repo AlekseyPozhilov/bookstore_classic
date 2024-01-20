@@ -30,12 +30,20 @@ public class FrontController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        process(req, resp);
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        process(req, resp);
+    }
+
+    private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String page;
         try {
             String command = req.getParameter("command");
             Controller controller = ControllerFactory.INSTANCE.get(command);
             page = controller.execute(req);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             page = ControllerFactory.INSTANCE.get("error").execute(req);
         }
