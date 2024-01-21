@@ -79,14 +79,14 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = dataSource.getConnection()) {
             log.debug("Updating user", user);
             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
-            statement.setLong(1, user.getId());
-            statement.setString(2, user.getFirstName());
-            statement.setString(3, user.getLastName());
-            statement.setString(4, user.getEmail());
-            statement.setString(5, user.getDateOfBirth());
-            statement.setString(6, user.getGender());
-            statement.setString(7, user.getPhoneNumber());
-            statement.setString(8, user.getPassword());
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, user.getDateOfBirth());
+            statement.setString(5, user.getGender());
+            statement.setString(6, user.getPhoneNumber());
+            statement.setString(7, user.getPassword());
+            statement.setLong(8, user.getId());
             statement.executeUpdate();
 
             log.debug("User updated");

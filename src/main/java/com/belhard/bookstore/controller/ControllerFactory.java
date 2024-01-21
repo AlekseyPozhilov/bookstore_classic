@@ -1,12 +1,16 @@
 package com.belhard.bookstore.controller;
 
 import com.belhard.bookstore.PropertiesManager;
-import com.belhard.bookstore.controller.create.CreateUserController;
+import com.belhard.bookstore.controller.create.user.CreateUserController;
 import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.connection.DataSourceImpl;
 import com.belhard.bookstore.controller.book.BookController;
 import com.belhard.bookstore.controller.book.BooksController;
-import com.belhard.bookstore.controller.create.CreateUserFormController;
+import com.belhard.bookstore.controller.create.user.CreateUserFormController;
+import com.belhard.bookstore.controller.edit.book.EditBookController;
+import com.belhard.bookstore.controller.edit.book.EditBookFormController;
+import com.belhard.bookstore.controller.edit.user.EditUserController;
+import com.belhard.bookstore.controller.edit.user.EditUserFormController;
 import com.belhard.bookstore.controller.error.ErrorController;
 import com.belhard.bookstore.controller.home.HomeController;
 import com.belhard.bookstore.controller.user.UserController;
@@ -60,6 +64,10 @@ public class ControllerFactory implements Closeable {
         map.put("home", new HomeController());
         map.put("create_user_form", new CreateUserFormController());
         map.put("create_user", new CreateUserController(userService));
+        map.put("edit_user_form", new EditUserFormController(userService));
+        map.put("edit_user", new EditUserController(userService));
+        map.put("edit_book_form", new EditBookFormController(bookService));
+        map.put("edit_book", new EditBookController(bookService));
     }
 
     public Controller get(String command) {

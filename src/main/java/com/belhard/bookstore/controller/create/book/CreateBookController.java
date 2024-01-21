@@ -1,4 +1,4 @@
-package com.belhard.bookstore.controller.create;
+package com.belhard.bookstore.controller.create.book;
 
 import com.belhard.bookstore.controller.Controller;
 import jakarta.servlet.http.HttpServletRequest;

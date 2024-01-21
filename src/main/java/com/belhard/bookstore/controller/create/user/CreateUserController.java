@@ -1,4 +1,4 @@
-package com.belhard.bookstore.controller.create;
+package com.belhard.bookstore.controller.create.user;
 
 import com.belhard.bookstore.controller.Controller;
 import com.belhard.bookstore.dto.user.CreateUserDto;
@@ -13,7 +13,6 @@ import lombok.extern.log4j.Log4j2;
 public class CreateUserController implements Controller {
     private final UserService userService;
     public String execute(HttpServletRequest req) {
-        log.info("WE ARE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         CreateUserDto toSave = processRequest(req);
         UserDto saved = userService.create(toSave);
         setRequestAttributes(req, saved);
@@ -22,12 +21,10 @@ public class CreateUserController implements Controller {
     }
 
     private static void setRequestAttributes(HttpServletRequest req, UserDto saved) {
-        log.info("WE ARE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         req.setAttribute("user", saved);
     }
 
     private static CreateUserDto processRequest(HttpServletRequest req) {
-        log.info("WE ARE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         String firstName = req.getParameter("firstName");
         String email = req.getParameter("email");
         String password = req.getParameter("password");

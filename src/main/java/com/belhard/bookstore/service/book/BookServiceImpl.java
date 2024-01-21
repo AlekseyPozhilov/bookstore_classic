@@ -50,6 +50,14 @@ public class BookServiceImpl implements BookService {
         log.debug("Fetching book by ID: {}", id);
 
         Book bookEntity = bookDao.findById(id);
+        if (bookEntity == null) {
+            log.error("Error");
+            throw new RuntimeException("No user with id:" + id);
+        }
+        return userReadDto(bookEntity);
+    }
+
+    private static BookDto userReadDto(Book bookEntity) {
         BookDto dto = new BookDto();
         dto.setId(bookEntity.getId());
         dto.setAuthor(bookEntity.getAuthor());
@@ -59,7 +67,6 @@ public class BookServiceImpl implements BookService {
         dto.setYearOfPublishing(bookEntity.getYearOfPublishing());
         dto.setTitle(bookEntity.getTitle());
 
-        log.debug("Book received", dto);
         return dto;
     }
 

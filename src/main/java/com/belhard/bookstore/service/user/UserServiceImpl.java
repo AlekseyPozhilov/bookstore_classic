@@ -13,6 +13,7 @@ import java.util.List;
 @Log4j2
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
+
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -43,11 +44,10 @@ public class UserServiceImpl implements UserService {
     public UserDto create(CreateUserDto dto) {
         try {
             log.debug("Creating user: {}", dto);
-            User userEntity = new User();
             User user = toEntity(dto);
             User created = userDao.create(user);
 
-            log.debug("User created: {}", userEntity);
+            log.debug("User created: {}", user);
 
             return userReadDto(created);
         } catch (SQLException e) {
@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public UserDto findByEmail(String email) {
         try {
@@ -162,16 +163,17 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public UserDto findById(Long id) {
         try {
-        log.debug("Fetching user by ID: {}", id);
+            log.debug("Fetching user by ID: {}", id);
 
-        User userEntity = userDao.read(id);
+            User userEntity = userDao.read(id);
             UserDto dto = userReadDto(userEntity);
 
             log.debug("User received", dto);
-        return dto;
+            return dto;
         } catch (SQLException e) {
             log.error("Failed to find user: {}", id, e);
             throw new RuntimeException(e);
