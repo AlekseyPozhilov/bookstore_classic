@@ -13,7 +13,7 @@ import java.util.List;
 
 @Log4j2
 public class UserDaoImpl implements UserDao {
-    public static final String INSERT_QUERY = "INSERT INTO users (id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String INSERT_QUERY = "INSERT INTO users (firstName, lastName, email, dateOfBirth, gender, phoneNumber, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
     public static final String SELECT_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE id = ?";
     public static final String UPDATE_QUERY = "UPDATE users SET firstName = ?, lastName = ?, email = ?, dateOfBirth = ?, gender = ?, phoneNumber = ?, password = ? WHERE id = ?";
     public static final String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
@@ -28,19 +28,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void create(User user) {
+    public User create(User user) {
         try (Connection connection = dataSource.getConnection()) {
             log.debug("Creating user", user);
 
             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
-            statement.setLong(1, user.getId());
-            statement.setString(2, user.getFirstName());
-            statement.setString(3, user.getLastName());
-            statement.setString(4, user.getEmail());
-            statement.setString(5, user.getDateOfBirth());
-            statement.setString(6, user.getGender());
-            statement.setString(7, user.getPhoneNumber());
-            statement.setString(8, user.getPassword());
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, user.getDateOfBirth());
+            statement.setString(5, user.getGender());
+            statement.setString(6, user.getPhoneNumber());
+            statement.setString(7, user.getPassword());
 
             statement.executeUpdate();
 
@@ -49,6 +48,7 @@ public class UserDaoImpl implements UserDao {
             log.error("Failed to create user: {}", user, e);
             throw new RuntimeException(e);
         }
+        return user;
     }
 
     @Override
@@ -79,14 +79,14 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = dataSource.getConnection()) {
             log.debug("Updating user", user);
             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
-            statement.setLong(1, user.getId());
-            statement.setString(2, user.getFirstName());
-            statement.setString(3, user.getLastName());
-            statement.setString(4, user.getEmail());
-            statement.setString(5, user.getDateOfBirth());
-            statement.setString(6, user.getGender());
-            statement.setString(7, user.getPhoneNumber());
-            statement.setString(8, user.getPassword());
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, user.getDateOfBirth());
+            statement.setString(5, user.getGender());
+            statement.setString(6, user.getPhoneNumber());
+            statement.setString(7, user.getPassword());
+            statement.setLong(8, user.getId());
             statement.executeUpdate();
 
             log.debug("User updated");

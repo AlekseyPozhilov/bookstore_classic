@@ -3,24 +3,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-                                <%-- <link rel="stylesheet" type="text/css" href="css/style.css"> --%>
+<link rel="stylesheet" type="text/css" href="css/user/users.css">
     <title>Users</title>
 </head>
 <body>
-                                <%-- <jsp:include page="../navbar.jsp" /> --%>
+<jsp:include page="../navbar.jsp" />
 <h1>All Users</h1>
 <table>
     <tr>
         <th>#</th>
         <th>Id</th>
         <th>Email</th>
-        <th>Password</th>
+        <th>Edit</th>
     </tr>
     <c:forEach items="${users}" var="user" varStatus="counter">
         <tr>
             <td>${counter.count}</td>
             <td>${user.id}</td>
-            <td><a href="controller?command=user&id=${user.id}"><c:out value="${user.email}" /></a></td>
+            <td><a href="bookstore?command=user&id=${user.id}"><c:out value="${user.email}" /></a></td>
+
             <td>
                 <form>
                     <input type="hidden" name="command" value="edit_user_form">

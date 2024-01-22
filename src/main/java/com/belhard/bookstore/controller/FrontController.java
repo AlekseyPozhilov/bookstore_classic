@@ -1,10 +1,5 @@
 package com.belhard.bookstore.controller;
 
-import com.belhard.bookstore.controller.book.BookController;
-import com.belhard.bookstore.controller.book.BooksController;
-import com.belhard.bookstore.controller.error.ErrorController;
-import com.belhard.bookstore.controller.user.UserController;
-import com.belhard.bookstore.controller.user.UsersController;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,31 +12,41 @@ import java.io.IOException;
 @Log4j2
 @WebServlet("/bookstore")
 public class FrontController extends HttpServlet {
+    private ControllerFactory controllerFactory;
+
+    @Override
+    public void init() {
+        log.info("Init called");
+        controllerFactory = new ControllerFactory();
+        log.info("Init completed");
+    }
+
+    @Override
+    public void destroy() {
+        log.info("Destroy called");
+        controllerFactory.close();
+        log.info("Destroy completed");
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String command = req.getParameter("command");
-        switch (command) {
-            case "user" -> {
-                UserController userController = new UserController();
-                userController.doGet(req, resp);
-            }
-            case "users" -> {
-                UsersController usersController = new UsersController();
-                usersController.doGet(req, resp);
-            }
-            case "book" -> {
-                BookController bookController = new BookController();
-                bookController.doGet(req, resp);
-            }
-            case "books" -> {
-                BooksController booksController = new BooksController();
-                booksController.doGet(req, resp);
-            }
-            default -> {
-                ErrorController errorController = new ErrorController();
-                errorController.doGet(req, resp);
-                log.error("Failed request");
-            }
+        process(req, resp);
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        process(req, resp);
+    }
+
+    private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String page;
+        try {
+            String command = req.getParameter("command");
+            Controller controller = ControllerFactory.INSTANCE.get(command);
+            page = controller.execute(req);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            page = ControllerFactory.INSTANCE.get("error").execute(req);
         }
+        req.getRequestDispatcher(page).forward(req, resp);
     }
 }

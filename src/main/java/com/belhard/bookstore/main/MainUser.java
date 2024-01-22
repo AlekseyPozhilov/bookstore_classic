@@ -19,7 +19,9 @@ public class MainUser {
         String password = propertiesManager.getKey("my.app.db." + profile + ".password");
         String drv = propertiesManager.getKey("my.app.db." + profile + ".drv");
 
-        DataSourceImpl dataSource = new DataSourceImpl(url, user, password, drv);
+        int poolSize = 20;
+
+        DataSourceImpl dataSource = new DataSourceImpl(url, user, password, drv, poolSize);
 
         try (Connection connection = dataSource.getConnection()) {
             consoleApp(dataSource);

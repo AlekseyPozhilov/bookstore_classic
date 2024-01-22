@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface UserDao {
-    void create(User user) throws SQLException;
+    User create(User user) throws SQLException;
 
     User read(Long id) throws SQLException;
 

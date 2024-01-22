@@ -18,7 +18,7 @@ public class BookDaoImpl implements BookDao {
     public static final String SELECT_ISBN_QUERY = "SELECT id, author, numberOfPages, price, yearOfPublishing, title FROM books";
     public static final String SELECT_ID_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE id = ?";
     private static final String SELECT_AUTHOR_QUERY = "SELECT id, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE  author  = ?";
-    private static final String INSERT_QUERY = "INSERT INTO books (id, author, isbn, numberOfPages, price, yearOfPublishing, title) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_QUERY = "INSERT INTO books (author, isbn, numberOfPages, price, yearOfPublishing, title) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SELECT_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE id = ?";
     private static final String UPDATE_QUERY = "UPDATE books SET author = ?, isbn = ?, numberOfPages = ?, price = ?, yearOfPublishing = ?, title = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM books WHERE id = ?";
@@ -33,13 +33,12 @@ public class BookDaoImpl implements BookDao {
         try (Connection connection = dataSource.getConnection()) {
             log.debug("Creating book", book);
             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
-            statement.setLong(1, book.getId());
-            statement.setString(2, book.getAuthor());
-            statement.setString(3, book.getIsbn());
-            statement.setInt(4, book.getNumberOfPages());
-            statement.setBigDecimal(5, book.getPrice());
-            statement.setInt(6, book.getYearOfPublishing());
-            statement.setString(7, book.getTitle());
+            statement.setString(1, book.getAuthor());
+            statement.setString(2, book.getIsbn());
+            statement.setInt(3, book.getNumberOfPages());
+            statement.setBigDecimal(4, book.getPrice());
+            statement.setInt(5, book.getYearOfPublishing());
+            statement.setString(6, book.getTitle());
             statement.executeUpdate();
             log.debug("Book created");
         } catch (SQLException e) {
