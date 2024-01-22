@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
     public UserDto create(CreateUserDto dto) {
         try {
             log.debug("Creating user: {}", dto);
+
             User user = toEntity(dto);
             User created = userDao.create(user);
 

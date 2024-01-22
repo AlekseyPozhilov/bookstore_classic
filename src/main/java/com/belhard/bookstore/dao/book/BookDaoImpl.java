@@ -3,8 +3,7 @@ package com.belhard.bookstore.dao.book;
 import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.entity.Book;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +28,7 @@ public class BookDaoImpl implements BookDao {
         this.dataSource = dataSource;
     }
 
-    public void create(Book book) {
+    public Book create(Book book) {
         try (Connection connection = dataSource.getConnection()) {
             log.debug("Creating book", book);
             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
@@ -45,6 +44,7 @@ public class BookDaoImpl implements BookDao {
             log.error("Failed to create book: {}", book, e);
             throw new RuntimeException(e);
         }
+        return book;
     }
 
     public Book read(int id) {

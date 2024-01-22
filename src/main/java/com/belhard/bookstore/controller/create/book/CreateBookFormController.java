@@ -7,6 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateBookFormController implements Controller {
     public String execute(HttpServletRequest req) {
-        return "jsp/user/createBookForm.jsp";
+        return "jsp/book/createBookForm.jsp";
     }
 }

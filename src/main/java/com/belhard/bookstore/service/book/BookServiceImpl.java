@@ -2,6 +2,7 @@ package com.belhard.bookstore.service.book;
 
 import com.belhard.bookstore.dao.book.BookDao;
 import com.belhard.bookstore.dto.book.BookDto;
+import com.belhard.bookstore.dto.book.CreateBookDto;
 import com.belhard.bookstore.entity.Book;
 import lombok.extern.log4j.Log4j2;
 
@@ -54,10 +55,10 @@ public class BookServiceImpl implements BookService {
             log.error("Error");
             throw new RuntimeException("No user with id:" + id);
         }
-        return userReadDto(bookEntity);
+        return bookReadDto(bookEntity);
     }
 
-    private static BookDto userReadDto(Book bookEntity) {
+    private static BookDto bookReadDto(Book bookEntity) {
         BookDto dto = new BookDto();
         dto.setId(bookEntity.getId());
         dto.setAuthor(bookEntity.getAuthor());
@@ -121,26 +122,31 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto create(BookDto dto) {
+    public BookDto create(CreateBookDto dto) {
         try {
             log.debug("Creating book: {}", dto);
-            Book bookEntity = new Book();
-            bookEntity.setAuthor(dto.getAuthor());
-            bookEntity.setIsbn(dto.getIsbn());
-            bookEntity.setNumberOfPages(dto.getNumberOfPages());
-            bookEntity.setPrice(dto.getPrice());
-            bookEntity.setYearOfPublishing(dto.getYearOfPublishing());
-            bookEntity.setTitle(dto.getTitle());
 
-            bookDao.create(bookEntity);
+            Book book = toEntity(dto);
+            Book created = bookDao.create(book);
 
-            log.debug("book created: {}", bookEntity);
+            log.debug("book created: {}", book);
 
-            return dto;
+            return bookReadDto(created);
         } catch (SQLException e) {
             log.error("Failed to create book: {}", dto, e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static Book toEntity(CreateBookDto dto) {
+        Book bookEntity = new Book();
+        bookEntity.setAuthor(dto.getAuthor());
+        bookEntity.setIsbn(dto.getIsbn());
+        bookEntity.setNumberOfPages(dto.getNumberOfPages());
+        bookEntity.setPrice(dto.getPrice());
+        bookEntity.setYearOfPublishing(dto.getYearOfPublishing());
+        bookEntity.setTitle(dto.getTitle());
+        return bookEntity;
     }
 
     @Override

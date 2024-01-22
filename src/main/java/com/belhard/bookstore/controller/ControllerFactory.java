@@ -1,6 +1,8 @@
 package com.belhard.bookstore.controller;
 
 import com.belhard.bookstore.PropertiesManager;
+import com.belhard.bookstore.controller.create.book.CreateBookController;
+import com.belhard.bookstore.controller.create.book.CreateBookFormController;
 import com.belhard.bookstore.controller.create.user.CreateUserController;
 import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.connection.DataSourceImpl;
@@ -64,6 +66,8 @@ public class ControllerFactory implements Closeable {
         map.put("home", new HomeController());
         map.put("create_user_form", new CreateUserFormController());
         map.put("create_user", new CreateUserController(userService));
+        map.put("create_book_form", new CreateBookFormController());
+        map.put("create_book", new CreateBookController(bookService));
         map.put("edit_user_form", new EditUserFormController(userService));
         map.put("edit_user", new EditUserController(userService));
         map.put("edit_book_form", new EditBookFormController(bookService));

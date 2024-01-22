@@ -6,8 +6,13 @@
 <link rel="stylesheet" type="text/css" href="css/book/books.css">
     <title>Books</title>
 </head>
+
 <body>
 <jsp:include page="../navbar.jsp" />
+<form>
+<input type="hidden" name="command" value="create_book_form">
+        <input type="submit" value="Create book">
+</form>
 <h1>All Books</h1>
 <table>
     <tr>

@@ -11,19 +11,19 @@
         <input name="command" type="hidden" value="edit_book"/>
         <input name="id" type="hidden" value="${requestScope.book.id}"/>
         <label for="title-input">TITLE: </label>
-        <input id="title-input" name="title" type="text" required value="${book.title}"/>
+        <input id="title-input" name="title" type="text" required value="${book.title}" required/>
         <br/>
         <label for="author-input">AUTHOR: </label>
-        <input id="author-input" name="author" type="text" required value="${book.author}"/>
+        <input id="author-input" name="author" type="text" required value="${book.author}" required/>
         <br/>
         <label for="price-input">PRICE: </label>
-        <input id="price-input" name="price" type="number" required value="${book.price}"/>
+        <input id="price-input" name="price" type="number" required value="${book.price}" required/>
         <br/>
          <label for = "numberOfPages-input">PAGES:</label>
-         <input id = "numberOfPages-input" name = "numberOfPages" type = "number" value = "${requestScope.book.numberOfPages}" required/>
+         <input id = "numberOfPages-input" name = "numberOfPages" type = "number" required/>
         <br/>
          <label for = "yearOfPublishing-input">yearOfPublishing:</label>
-         <input id = "yearOfPublishing-input" name = "yearOfPublishing" type = "number" value = "${requestScope.book.yearOfPublishing}" required/>
+         <input id = "yearOfPublishing-input" name = "yearOfPublishing" type = "number" required/>
         <br/>
         <input type="submit" value="SAVE">
     </form>
